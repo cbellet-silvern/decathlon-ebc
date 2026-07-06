@@ -52,9 +52,7 @@ export function CandidatePage({
 
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h2 className="text-xl font-black italic tracking-tight text-ink">
-            {application.candidate}
-          </h2>
+          <h2 className="text-xl font-bold tracking-tight text-ink">{application.candidate}</h2>
           <p className="mt-0.5 text-xs text-muted">
             {application.company} · {application.city}, {application.country} ·{' '}
             {application.format} · {eur(application.investment)} committed ·{' '}

@@ -14,11 +14,13 @@ A tabbed React app on the Decathlon graphic charter (light theme, Decathlon Blue
 
 - **Overview** — KPI cards, the interactive network map (existing stores + candidate
   locations, colored by recommendation), pipeline trend, and score distribution
-- **Application Review** — the working surface: sortable applications table with live
-  review progress, a candidate assessment panel (criteria radar, validation gates,
-  risk flags) with **Approve / Waitlist / Reject** decisions, and a due-diligence
-  board where reviewers record ● / ✓ / ✕ checks across business plan, legal,
-  financing, site & operations, and compliance
+- **Application Review** — a sortable applications table with live review progress;
+  opening a row (works by keyboard too) shows the **candidate page**: assessment
+  (criteria radar, validation gates, risk flags), the **document file** (click a
+  status to cycle Missing → Received → Verified), the **reviewer notes** trail with a
+  composer, **Approve / Waitlist / Reject** decisions, and the due-diligence board
+  where reviewers mark each check across business plan, legal, financing, site &
+  operations, and compliance
 - **Store Network** — the store estate with revenue and performance, plus revenue by
   country
 

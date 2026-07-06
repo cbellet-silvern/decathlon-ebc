@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { ReviewNote } from '../data/types'
-import { shortDate } from '../lib/format'
+import { fullDate } from '../lib/format'
 
 interface Props {
   notes: ReviewNote[]
@@ -17,17 +17,22 @@ export function NotesPanel({ notes, onAdd }: Props) {
     setDraft('')
   }
 
+  // Newest first, so a just-added note is immediately visible at the top.
+  const ordered = [...notes].reverse()
+
   return (
     <div>
       <ul className="max-h-64 space-y-3 overflow-y-auto pr-1">
-        {notes.length === 0 && <li className="text-xs text-muted">No notes yet.</li>}
-        {notes.map((n) => (
+        {ordered.length === 0 && <li className="text-xs text-muted">No notes yet.</li>}
+        {ordered.map((n) => (
           <li key={n.id} className="rounded-lg border border-edge bg-panel2/60 px-3 py-2">
             <div className="flex items-baseline justify-between gap-2 text-xs">
               <span className="font-semibold text-ink">{n.author}</span>
-              <span className="text-muted">{shortDate(n.date)}</span>
+              <span className="shrink-0 text-muted">{fullDate(n.date)}</span>
             </div>
-            <p className="mt-1 text-xs leading-relaxed text-ink">{n.text}</p>
+            <p className="mt-1 whitespace-pre-wrap break-words text-xs leading-relaxed text-ink">
+              {n.text}
+            </p>
           </li>
         ))}
       </ul>
@@ -40,7 +45,8 @@ export function NotesPanel({ notes, onAdd }: Props) {
             if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) submit()
           }}
           rows={2}
-          placeholder="Add a note to the file…"
+          aria-label="Add a note to the file"
+          placeholder="Add a note to the file… (Cmd+Enter to save)"
           className="w-full resize-none rounded-lg border border-edge bg-panel px-3 py-2 text-xs text-ink placeholder:text-muted focus:border-brand/50 focus:outline-none focus:ring-2 focus:ring-brand/20"
         />
         <button

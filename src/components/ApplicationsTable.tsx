@@ -51,8 +51,16 @@ export function ApplicationsTable({ applications, progress, selectedId, onSelect
             return (
               <tr
                 key={a.id}
+                tabIndex={0}
                 onClick={() => onSelect(a.id)}
-                className={`cursor-pointer border-b border-edge/50 transition-colors ${
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    onSelect(a.id)
+                  }
+                }}
+                aria-label={`Open ${a.candidate}'s application file`}
+                className={`cursor-pointer border-b border-edge/50 transition-colors focus-visible:bg-panel2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand/60 ${
                   selected ? 'bg-panel2' : 'hover:bg-panel2/60'
                 }`}
               >

@@ -15,6 +15,11 @@ function docs(statuses: DocumentStatus[], updated: string): CandidateDocument[] 
   return DOCUMENT_TEMPLATE.map((name, i) => ({ name, status: statuses[i] ?? 'Missing', updated }))
 }
 
+/** The starting file for an application with no recorded documents yet. */
+export function missingDocuments(updated: string): CandidateDocument[] {
+  return DOCUMENT_TEMPLATE.map((name) => ({ name, status: 'Missing', updated }))
+}
+
 export const DOCUMENTS: Record<string, CandidateDocument[]> = {
   'ap-01': docs(['Verified', 'Verified', 'Verified', 'Verified', 'Verified', 'Verified'], '2026-04-02'),
   'ap-02': docs(['Verified', 'Verified', 'Received', 'Verified', 'Received', 'Verified'], '2026-06-24'),

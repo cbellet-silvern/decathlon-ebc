@@ -25,6 +25,15 @@ export function shortDate(iso: string): string {
   return new Date(iso).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
 }
 
+/** Day-precision date from an ISO date, e.g. "18 Jun 2026" — for notes & documents. */
+export function fullDate(iso: string): string {
+  return new Date(iso).toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  })
+}
+
 /** Bare month from an ISO date, e.g. "Mar" — for chart axis ticks. */
 export function monthTick(iso: string): string {
   return new Date(iso).toLocaleDateString('en-US', { month: 'short' })

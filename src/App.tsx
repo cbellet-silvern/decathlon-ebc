@@ -6,7 +6,7 @@ import { ApplicationsTab } from './components/ApplicationsTab'
 import { CandidatePage } from './components/CandidatePage'
 import { NetworkTab } from './components/NetworkTab'
 import { APPLICATIONS } from './data/applications'
-import { DOCUMENTS, NOTES } from './data/artifacts'
+import { DOCUMENTS, NOTES, missingDocuments } from './data/artifacts'
 import { REVIEW_PROGRESS } from './data/reviews'
 import type {
   ApplicationStatus,
@@ -45,7 +45,7 @@ export default function App() {
     if (!selected) return
     setDocuments((d) => ({
       ...d,
-      [selected.id]: (d[selected.id] ?? []).map((doc) =>
+      [selected.id]: (d[selected.id] ?? missingDocuments(selected.submitted)).map((doc) =>
         doc.name === name ? { ...doc, status, updated: new Date().toISOString() } : doc,
       ),
     }))
@@ -64,7 +64,13 @@ export default function App() {
   return (
     <div className="mx-auto max-w-[1280px] px-5 py-6">
       <Header />
-      <Tabs active={tab} onChange={setTab} />
+      <Tabs
+        active={tab}
+        onChange={(t) => {
+          setTab(t)
+          if (t === 'applications') setView('list') // tab always lands on the list
+        }}
+      />
 
       {tab === 'overview' && (
         <OverviewTab
@@ -79,7 +85,7 @@ export default function App() {
           <CandidatePage
             application={selected}
             progress={progress}
-            documents={documents[selected.id] ?? []}
+            documents={documents[selected.id] ?? missingDocuments(selected.submitted)}
             notes={notes[selected.id] ?? []}
             onBack={() => setView('list')}
             onDecision={setAppStatus}
