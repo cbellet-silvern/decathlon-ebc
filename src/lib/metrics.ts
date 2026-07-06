@@ -24,15 +24,29 @@ export function avgScore(apps: FranchiseApplication[]): number {
   return Math.round(apps.reduce((acc, a) => acc + overallScore(a), 0) / apps.length)
 }
 
-/** Committed investment across applications not recommended for rejection. */
+/**
+ * Committed investment across the qualified pipeline: a manual Approve counts
+ * regardless of the derived recommendation; undecided applications must pass
+ * the screening (not recommended for rejection).
+ */
 export function qualifiedInvestment(apps: FranchiseApplication[]): number {
   return apps
-    .filter((a) => a.status !== 'Rejected' && recommend(a) !== 'Reject')
+    .filter(
+      (a) => a.status === 'Approved' || (a.status !== 'Rejected' && recommend(a) !== 'Reject'),
+    )
     .reduce((acc, a) => acc + a.investment, 0)
 }
 
 export function networkRevenue(stores: FranchiseStore[]): number {
   return stores.reduce((acc, s) => acc + s.annualRevenue, 0)
+}
+
+export function revenueByCountry(stores: FranchiseStore[]): { country: Country; revenue: number }[] {
+  const totals = new Map<Country, number>()
+  for (const s of stores) totals.set(s.country, (totals.get(s.country) ?? 0) + s.annualRevenue)
+  return [...totals.entries()]
+    .map(([country, revenue]) => ({ country, revenue }))
+    .sort((a, b) => b.revenue - a.revenue)
 }
 
 export function countryMix(apps: FranchiseApplication[]): { country: Country; count: number }[] {

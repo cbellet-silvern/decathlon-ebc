@@ -1,34 +1,26 @@
 import type { FranchiseApplication } from '../data/types'
-import { shortDate } from '../lib/format'
 import { overallScore, recommend, validateApplication } from '../lib/scoring'
 import { RecommendationBadge } from './Badges'
 import { CriteriaRadar } from './CriteriaRadar'
-import { STATUS_COLORS } from './chartTheme'
+import { Icon } from './Icon'
 
 interface Props {
   application: FranchiseApplication
 }
 
+/** Scoring & validation-gates panel of the candidate page. */
 export function ApplicationDetail({ application }: Props) {
   const checks = validateApplication(application)
   return (
     <div>
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <div className="font-semibold text-white">{application.candidate}</div>
-          <div className="text-xs text-muted">
-            {application.company} · {application.city}, {application.country} · submitted{' '}
-            {shortDate(application.submitted)}
-          </div>
+      <div className="flex items-baseline justify-between gap-3">
+        <div className="flex items-baseline gap-2">
+          <span className="text-4xl font-bold tracking-tight text-ink">
+            {overallScore(application)}
+          </span>
+          <span className="text-sm text-muted">/ 100 weighted score</span>
         </div>
         <RecommendationBadge value={recommend(application)} />
-      </div>
-
-      <div className="mt-3 flex items-baseline gap-2">
-        <span className="text-4xl font-bold tracking-tight text-white">
-          {overallScore(application)}
-        </span>
-        <span className="text-sm text-muted">/ 100 weighted score</span>
       </div>
 
       <CriteriaRadar application={application} />
@@ -36,15 +28,11 @@ export function ApplicationDetail({ application }: Props) {
       <ul className="mt-2 space-y-2">
         {checks.map((c) => (
           <li key={c.label} className="flex items-start gap-2.5 text-sm">
-            <span
-              aria-hidden
-              className="mt-0.5 text-xs font-bold"
-              style={{ color: c.passed ? STATUS_COLORS.good : STATUS_COLORS.critical }}
-            >
-              {c.passed ? '✓' : '✕'}
+            <span className={`mt-1 ${c.passed ? 'text-ok' : 'text-danger'}`}>
+              <Icon kind={c.passed ? 'check' : 'cross'} className="h-3 w-3" />
             </span>
             <div>
-              <span className="text-silver">{c.label}</span>
+              <span className="text-ink">{c.label}</span>
               <span className="text-xs text-muted"> — {c.detail}</span>
             </div>
           </li>
@@ -56,9 +44,9 @@ export function ApplicationDetail({ application }: Props) {
           {application.riskFlags.map((flag) => (
             <div
               key={flag}
-              className="rounded-lg border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-silver"
+              className="flex items-center gap-1.5 rounded-lg border border-danger/30 bg-danger/5 px-3 py-2 text-xs text-danger"
             >
-              ⚠ {flag}
+              <Icon kind="bang" className="h-3 w-3 shrink-0" /> {flag}
             </div>
           ))}
         </div>

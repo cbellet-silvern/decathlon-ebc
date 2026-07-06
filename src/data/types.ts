@@ -75,3 +75,23 @@ export type ReviewArea =
   | 'Compliance'
 
 export type ReviewItemStatus = 'Pending' | 'In Progress' | 'Validated' | 'Failed'
+
+/** Review state: application id → checklist item label → status. */
+export type ReviewProgress = Record<string, Record<string, ReviewItemStatus>>
+
+export type DocumentStatus = 'Missing' | 'Received' | 'Verified'
+
+/** A required artifact in the candidate's application file. */
+export interface CandidateDocument {
+  name: string
+  status: DocumentStatus
+  updated: string // ISO date of the last status change
+}
+
+/** A reviewer note on the candidate's file. */
+export interface ReviewNote {
+  id: string
+  author: string
+  date: string // ISO date
+  text: string
+}

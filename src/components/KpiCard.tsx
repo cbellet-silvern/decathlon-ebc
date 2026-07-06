@@ -20,7 +20,7 @@ export function KpiCard({ label, value, delta, invertDelta = false, sub, icon }:
         <span className="label-muted">{label}</span>
         {icon && <span className="text-muted">{icon}</span>}
       </div>
-      <div className="mt-3 text-3xl font-bold tracking-tight text-white">{value}</div>
+      <div className="mt-3 text-3xl font-bold tracking-tight text-ink">{value}</div>
       <div className="mt-2 flex items-center gap-2 text-sm">
         {delta !== undefined && (
           <span className={isGood ? 'text-accent2' : 'text-danger'}>{signedPct(delta)}</span>

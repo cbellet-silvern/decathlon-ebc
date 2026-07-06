@@ -12,6 +12,10 @@ const REC_COLOR: Record<Recommendation, string> = {
   Reject: STATUS_COLORS.critical,
 }
 
+// Dark outline ring keeps every marker separable on the light basemap — the
+// warning-yellow marker in particular never rides on fill alone.
+const MARKER_RING = 'rgba(16, 23, 51, 0.35)'
+
 interface Props {
   stores: FranchiseStore[]
   applications: FranchiseApplication[]
@@ -28,7 +32,7 @@ export function NetworkMap({ stores, applications, selectedId, onSelect }: Props
     if (!containerRef.current || mapRef.current) return
     const map = L.map(containerRef.current, { scrollWheelZoom: false })
     map.setView([47.3, 6.0], 5)
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
       attribution: '&copy; OpenStreetMap &copy; CARTO',
       subdomains: 'abcd',
       maxZoom: 12,
@@ -52,7 +56,7 @@ export function NetworkMap({ stores, applications, selectedId, onSelect }: Props
         radius: 6,
         fillColor: SERIES[0],
         fillOpacity: 0.9,
-        color: '#0b0f1a', // 2px surface ring so touching marks stay separable
+        color: MARKER_RING,
         weight: 2,
       })
         .bindTooltip(`<strong>${s.name}</strong><br/>${eur(s.annualRevenue)} · ${s.performance}`)
@@ -66,7 +70,7 @@ export function NetworkMap({ stores, applications, selectedId, onSelect }: Props
         radius: selected ? 11 : 8,
         fillColor: REC_COLOR[rec],
         fillOpacity: 0.95,
-        color: selected ? '#ffffff' : '#0b0f1a',
+        color: selected ? '#101733' : MARKER_RING,
         weight: 2,
       })
         .bindTooltip(
@@ -80,7 +84,7 @@ export function NetworkMap({ stores, applications, selectedId, onSelect }: Props
   return (
     <div className="relative">
       <div ref={containerRef} className="z-0 h-[420px] rounded-xl border border-edge" />
-      <div className="absolute bottom-3 left-3 z-[500] space-y-1.5 rounded-xl border border-edge bg-panel/90 px-3 py-2.5 text-xs backdrop-blur">
+      <div className="absolute bottom-3 left-3 z-[500] space-y-1.5 rounded-xl border border-edge bg-panel/95 px-3 py-2.5 text-xs shadow-sm backdrop-blur">
         <LegendRow color={SERIES[0]} label="Existing store" />
         <LegendRow color={STATUS_COLORS.good} label="Candidate · approve" />
         <LegendRow color={STATUS_COLORS.warning} label="Candidate · review" />
@@ -93,7 +97,10 @@ export function NetworkMap({ stores, applications, selectedId, onSelect }: Props
 function LegendRow({ color, label }: { color: string; label: string }) {
   return (
     <div className="flex items-center gap-2 text-muted">
-      <span className="h-2.5 w-2.5 rounded-full" style={{ background: color }} />
+      <span
+        className="h-2.5 w-2.5 rounded-full"
+        style={{ background: color, boxShadow: `inset 0 0 0 1px ${MARKER_RING}` }}
+      />
       {label}
     </div>
   )

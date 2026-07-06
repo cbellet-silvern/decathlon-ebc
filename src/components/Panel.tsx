@@ -13,7 +13,7 @@ export function Panel({ title, subtitle, action, children, className = '' }: Pan
     <section className={`card card-pad ${className}`}>
       <header className="mb-4 flex items-start justify-between gap-3">
         <div>
-          <h2 className="text-sm font-semibold text-white">{title}</h2>
+          <h2 className="text-sm font-semibold text-ink">{title}</h2>
           {subtitle && <p className="mt-0.5 text-xs text-muted">{subtitle}</p>}
         </div>
         {action}

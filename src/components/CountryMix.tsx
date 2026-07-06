@@ -16,10 +16,10 @@ export function CountryMix({ applications }: Props) {
       {mix.map((m) => (
         <li key={m.country}>
           <div className="mb-1 flex items-center justify-between text-xs">
-            <span className="text-silver">{m.country}</span>
+            <span className="text-ink">{m.country}</span>
             <span className="font-medium tabular-nums text-muted">{m.count}</span>
           </div>
-          <div className="h-2 rounded-full bg-panel2">
+          <div className="h-2 rounded-full bg-edge">
             <div
               className="h-2 rounded-full"
               style={{ width: `${(m.count / max) * 100}%`, background: SERIES[0] }}

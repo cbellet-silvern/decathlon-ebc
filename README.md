@@ -10,16 +10,22 @@ network with candidate locations — built to showcase how
 
 ## The app
 
-A single-page React dashboard with:
+A tabbed React app on the Decathlon graphic charter (light theme, Decathlon Blue):
 
-- **KPI cards** — network stores, applications (trailing 12 mo), approval rate,
-  qualified investment
-- **Interactive network map** — existing stores + candidate locations across Europe,
-  colored by recommendation (Leaflet)
-- **Application scoring** — five weighted criteria, hard validation gates, risk flags,
-  and a derived Approve / Review / Reject recommendation
-- **Pipeline trend** — applications received vs. approved, trailing 12 months
-- **Candidate assessment panel** — radar of criteria scores + validation checklist
+- **Overview** — KPI cards, the interactive network map (existing stores + candidate
+  locations, colored by recommendation), pipeline trend, and score distribution
+- **Application Review** — a sortable applications table with live review progress;
+  opening a row (works by keyboard too) shows the **candidate page**: assessment
+  (criteria radar, validation gates, risk flags), the **document file** (click a
+  status to cycle Missing → Received → Verified), the **reviewer notes** trail with a
+  composer, **Approve / Waitlist / Reject** decisions, and the due-diligence board
+  where reviewers mark each check across business plan, legal, financing, site &
+  operations, and compliance
+- **Store Network** — the store estate with revenue and performance, plus revenue by
+  country
+
+Review actions mutate live React state seeded from `src/data/` — approve a candidate
+and every badge, KPI, and progress bar updates.
 
 All figures are illustrative seed data in `src/data/`; the scoring model lives in
 `src/lib/scoring.ts` and every rollup is recomputed via selectors in

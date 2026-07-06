@@ -4,20 +4,19 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Decathlon dark theme
-        ink: '#0b0f1a',
-        panel: '#111729',
-        panel2: '#172136',
-        edge: '#26314f',
-        silver: '#cdd6ea',
-        muted: '#8b96b2',
-        brand: '#3643ba', // Decathlon blue — chrome/logo only
-        accent: '#5b6cff',
-        accent2: '#22c48b',
-        warn: '#fab219',
-        danger: '#e05252',
-        ok: '#0ca30c',
-        review: '#9085e9',
+        // Decathlon graphic charter — light theme
+        page: '#eef1f7', // app background
+        panel: '#ffffff',
+        panel2: '#f3f5fb',
+        edge: '#e3e7f2',
+        ink: '#101733', // primary text
+        muted: '#5f6a87',
+        brand: '#3643ba', // Decathlon Blue
+        accent2: '#00885e', // success text / positive deltas
+        warn: '#b45309',
+        danger: '#c02f2f',
+        ok: '#0a7d0a',
+        review: '#7c5cff',
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],

@@ -9,20 +9,19 @@
     height: 100%;
   }
   body {
-    @apply bg-ink text-silver font-sans antialiased;
+    @apply bg-page text-ink font-sans antialiased;
     background-image: radial-gradient(
-        900px circle at 12% -5%,
-        rgba(91, 108, 255, 0.12),
-        transparent 45%
-      ),
-      radial-gradient(800px circle at 100% 0%, rgba(34, 196, 139, 0.06), transparent 40%);
+      900px circle at 12% -5%,
+      rgba(54, 67, 186, 0.06),
+      transparent 45%
+    );
     background-attachment: fixed;
   }
 }
 
 @layer components {
   .card {
-    @apply rounded-2xl border border-edge bg-panel/70 backdrop-blur-sm shadow-lg shadow-black/20;
+    @apply rounded-2xl border border-edge bg-panel shadow-sm;
   }
   .card-pad {
     @apply p-5;
@@ -40,25 +39,26 @@
   border-radius: 12px !important;
 }
 
-/* Leaflet dark-theme integration */
+/* Leaflet light-theme integration */
 .leaflet-container {
-  background: #0b0f1a;
+  background: #eef1f7;
   font-family: inherit;
 }
 .leaflet-tooltip {
-  background: #172136;
-  border: 1px solid #26314f;
+  background: #ffffff;
+  border: 1px solid #e3e7f2;
   border-radius: 10px;
-  color: #cdd6ea;
+  color: #101733;
   font-size: 12px;
+  box-shadow: 0 2px 8px rgba(16, 23, 51, 0.08);
 }
 .leaflet-tooltip-top:before {
-  border-top-color: #26314f;
+  border-top-color: #e3e7f2;
 }
 .leaflet-control-attribution {
-  background: rgba(17, 23, 41, 0.8) !important;
-  color: #8b96b2 !important;
+  background: rgba(255, 255, 255, 0.8) !important;
+  color: #5f6a87 !important;
 }
 .leaflet-control-attribution a {
-  color: #8b96b2 !important;
+  color: #5f6a87 !important;
 }

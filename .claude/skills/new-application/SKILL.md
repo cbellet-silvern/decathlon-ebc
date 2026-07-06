@@ -29,6 +29,11 @@ description: >
    Never store a score or recommendation — both are derived.
 4. If the user gave risk flags, add them verbatim to `riskFlags` (flags block an
    `Approve` recommendation).
+5. Seed the candidate's file in `src/data/artifacts.ts`: a `DOCUMENTS` entry (use
+   the `docs(...)` helper — a New application typically has a couple of documents
+   `Received` and the rest `Missing`) and an intake note in `NOTES` (author, date =
+   today). Without a `DOCUMENTS` entry the candidate page falls back to an
+   all-Missing file, which is acceptable but tells no story.
 
 ## Verify
 
