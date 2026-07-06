@@ -65,3 +65,13 @@ export interface PipelineMonth {
   received: number
   approved: number
 }
+
+/** Due-diligence workstream an application is reviewed under. */
+export type ReviewArea =
+  | 'Business Plan'
+  | 'Legal'
+  | 'Financing'
+  | 'Site & Operations'
+  | 'Compliance'
+
+export type ReviewItemStatus = 'Pending' | 'In Progress' | 'Validated' | 'Failed'

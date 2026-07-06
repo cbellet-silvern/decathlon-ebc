@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import type { FranchiseApplication } from '../data/types'
-import { eur } from '../lib/format'
+import { eur, pct } from '../lib/format'
+import { reviewCompletion } from '../lib/review'
 import { overallScore, recommend } from '../lib/scoring'
 import { RecommendationBadge, StatusBadge } from './Badges'
 import { SERIES } from './chartTheme'
@@ -34,6 +35,7 @@ export function ApplicationsTable({ applications, selectedId, onSelect }: Props)
             <th className="py-2 pr-4 font-medium">Format</th>
             <SortHeader label="Investment" active={sortKey === 'investment'} onClick={() => setSortKey('investment')} />
             <SortHeader label="Score" active={sortKey === 'score'} onClick={() => setSortKey('score')} />
+            <th className="py-2 pr-4 font-medium">Review</th>
             <th className="py-2 pr-4 font-medium">Recommendation</th>
             <th className="py-2 font-medium">Status</th>
           </tr>
@@ -68,6 +70,22 @@ export function ApplicationsTable({ applications, selectedId, onSelect }: Props)
                         className="block h-1.5 rounded-full"
                         style={{ width: `${score}%`, background: SERIES[0] }}
                       />
+                    </span>
+                  </div>
+                </td>
+                <td className="py-2.5 pr-4">
+                  <div className="flex items-center gap-2">
+                    <span className="h-1.5 w-10 rounded-full bg-panel2">
+                      <span
+                        className="block h-1.5 rounded-full"
+                        style={{
+                          width: `${reviewCompletion(a) * 100}%`,
+                          background: SERIES[0],
+                        }}
+                      />
+                    </span>
+                    <span className="w-8 text-xs tabular-nums text-muted">
+                      {pct(reviewCompletion(a))}
                     </span>
                   </div>
                 </td>

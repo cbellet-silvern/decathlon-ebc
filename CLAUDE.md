@@ -73,6 +73,11 @@ src/
 - **Store formats** — Full Store, City Store, Outlet.
 - **Pipeline** — monthly application intake volume (`src/data/pipeline.ts`); the
   applications table holds the currently active subset.
+- **Due diligence** — the review checklist (business plan, legal, financing, site &
+  operations, compliance) in `src/data/reviews.ts`. The template is fixed; per-app
+  progress overlays it, and `src/lib/review.ts` assembles the effective checklist.
+  Approved apps default to fully validated, everything else to pending. Review
+  progress is process tracking — independent of the scoring recommendation.
 
 ## Working agreements for Claude
 
