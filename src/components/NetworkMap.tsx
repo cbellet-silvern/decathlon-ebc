@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import type { FranchiseApplication, FranchiseStore, Recommendation } from '../data/types'
+import { CONFIG } from '../lib/config'
 import { eur } from '../lib/format'
 import { overallScore, recommend } from '../lib/scoring'
 import { SERIES, STATUS_COLORS } from './chartTheme'
@@ -32,7 +33,7 @@ export function NetworkMap({ stores, applications, selectedId, onSelect }: Props
     if (!containerRef.current || mapRef.current) return
     const map = L.map(containerRef.current, { scrollWheelZoom: false })
     map.setView([47.3, 6.0], 5)
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    L.tileLayer(`https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?key=${CONFIG.mapsApiKey}`, {
       attribution: '&copy; OpenStreetMap &copy; CARTO',
       subdomains: 'abcd',
       maxZoom: 12,
