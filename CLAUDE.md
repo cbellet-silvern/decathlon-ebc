@@ -107,3 +107,12 @@ This repo is configured for two MCP servers (see `.mcp.json`):
 - **GitHub** — issues, PRs, and code review (repo: `cbellet-silvern/decathlon-ebc`).
 - **Asana** — project management. Use it to turn flagged applications and expansion
   actions into tracked tasks.
+
+## Remediation workflow (enforced)
+
+Security findings and bugs are tracked on the **DFN Jira board** and fixed through a
+fixed process — see `.claude/skills/work-ticket`. Every change reaches `main` only via a
+PR from a dedicated `dfn-<n>-<slug>` branch; one ticket = one branch = one PR. The
+`protect-main` hook (`.claude/hooks/protect-main.sh`, registered in `settings.json`)
+enforces this by blocking direct commits to `main` and direct pushes to the `main` ref,
+so a review is always in the loop.
