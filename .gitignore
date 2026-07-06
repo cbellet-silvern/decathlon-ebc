@@ -1,0 +1,14 @@
+node_modules
+dist
+dist-ssr
+*.local
+.DS_Store
+*.tsbuildinfo
+
+# Local env (never commit real tokens)
+.env
+.env.local
+
+# Claude Code local artifacts
+.claude/session-log.txt
+.claude/settings.local.json
