@@ -8,20 +8,24 @@ accurate and concise.
 
 ## What this app is
 
-A single-page React dashboard for the franchise development team. It surfaces the
-existing store network, active applications with a weighted score and an
-Approve / Review / Reject recommendation, criteria validation gates, risk flags, the
-intake pipeline trend, and an interactive Leaflet map of stores + candidates.
+A tabbed React app for the franchise development team — **Overview** (KPIs, map,
+pipeline), **Application Review** (the working surface: applications table, candidate
+assessment with Approve/Waitlist/Reject decisions, and an interactive due-diligence
+board where reviewers record ✓/✕ checks), and **Store Network** (store table, revenue
+by country).
 
-All data is **mock/seed data** today (`src/data/`). There is no backend yet — the GitHub
-and Asana MCP integrations are the live, external surfaces (see below).
+All data is **mock/seed data** today (`src/data/`); review actions mutate React state
+seeded from it. There is no backend yet — the GitHub and Asana MCP integrations are the
+live, external surfaces (see below).
 
 ## Tech stack
 
 - **Vite + React 18 + TypeScript** (strict mode)
-- **Tailwind CSS** — dark Decathlon theme defined in `tailwind.config.js`
+- **Tailwind CSS** — light theme on the Decathlon graphic charter (Decathlon Blue
+  `#3643ba`), tokens in `tailwind.config.js`
 - **Recharts** for charts, **Leaflet** (plain, no react-leaflet) for the network map
-- No state library; component-local `useState`/`useMemo` is sufficient at this size.
+- No state library. `App.tsx` owns the live state (active tab, applications, review
+  progress, selection) and passes it down; components stay presentational.
 
 ## Commands
 
@@ -75,9 +79,11 @@ src/
   applications table holds the currently active subset.
 - **Due diligence** — the review checklist (business plan, legal, financing, site &
   operations, compliance) in `src/data/reviews.ts`. The template is fixed; per-app
-  progress overlays it, and `src/lib/review.ts` assembles the effective checklist.
-  Approved apps default to fully validated, everything else to pending. Review
-  progress is process tracking — independent of the scoring recommendation.
+  progress overlays it, and `src/lib/review.ts` assembles the effective checklist from
+  a `ReviewProgress` value (live App state, seeded from `REVIEW_PROGRESS`). Approved
+  apps default untracked items to Validated, everything else to Pending. Review
+  progress is process tracking — independent of the scoring recommendation. Decisions
+  (Approve/Waitlist/Reject) set workflow **status**; the recommendation stays derived.
 
 ## Working agreements for Claude
 

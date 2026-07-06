@@ -35,6 +35,14 @@ export function networkRevenue(stores: FranchiseStore[]): number {
   return stores.reduce((acc, s) => acc + s.annualRevenue, 0)
 }
 
+export function revenueByCountry(stores: FranchiseStore[]): { country: Country; revenue: number }[] {
+  const totals = new Map<Country, number>()
+  for (const s of stores) totals.set(s.country, (totals.get(s.country) ?? 0) + s.annualRevenue)
+  return [...totals.entries()]
+    .map(([country, revenue]) => ({ country, revenue }))
+    .sort((a, b) => b.revenue - a.revenue)
+}
+
 export function countryMix(apps: FranchiseApplication[]): { country: Country; count: number }[] {
   const counts = new Map<Country, number>()
   for (const a of apps) counts.set(a.country, (counts.get(a.country) ?? 0) + 1)
