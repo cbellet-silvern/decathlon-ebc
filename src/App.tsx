@@ -8,6 +8,7 @@ import { PipelineChart } from './components/PipelineChart'
 import { ScoreDistribution } from './components/ScoreDistribution'
 import { ApplicationsTable } from './components/ApplicationsTable'
 import { ApplicationDetail } from './components/ApplicationDetail'
+import { ReviewBoard } from './components/ReviewBoard'
 import { APPLICATIONS } from './data/applications'
 import { STORES } from './data/stores'
 import { PIPELINE } from './data/pipeline'
@@ -103,6 +104,16 @@ export default function App() {
         </Panel>
         <Panel title="Candidate assessment" subtitle="Criteria validation & weighted scoring">
           <ApplicationDetail application={selected} />
+        </Panel>
+      </div>
+
+      {/* Due-diligence review row */}
+      <div className="mt-4">
+        <Panel
+          title={`Due diligence — ${selected.candidate}`}
+          subtitle="Business plan, legal, financing, site & compliance validation"
+        >
+          <ReviewBoard application={selected} />
         </Panel>
       </div>
 
