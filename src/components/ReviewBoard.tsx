@@ -1,15 +1,16 @@
-import type { FranchiseApplication, ReviewItemStatus } from '../data/types'
-import { areaProgress, type ReviewProgress } from '../lib/review'
+import type { FranchiseApplication, ReviewItemStatus, ReviewProgress } from '../data/types'
+import { areaProgress } from '../lib/review'
+import { Icon, type IconKind } from './Icon'
 import { SERIES, STATUS_COLORS } from './chartTheme'
 
-// Distinct glyph per status so state never rides on color alone.
-const STATUS_GLYPH: Record<ReviewItemStatus, { glyph: string; color?: string; className?: string }> =
-  {
-    Validated: { glyph: '✓', color: STATUS_COLORS.good },
-    Failed: { glyph: '✕', color: STATUS_COLORS.critical },
-    'In Progress': { glyph: '●', className: 'text-accent' },
-    Pending: { glyph: '○', className: 'text-muted' },
-  }
+// Distinct glyph per status so state never rides on color alone. Text-grade
+// theme tokens keep the glyphs readable on white.
+const STATUS_GLYPH: Record<ReviewItemStatus, { kind: IconKind; className: string }> = {
+  Validated: { kind: 'check', className: 'text-ok' },
+  Failed: { kind: 'cross', className: 'text-danger' },
+  'In Progress': { kind: 'dot', className: 'text-brand' },
+  Pending: { kind: 'circle', className: 'text-muted' },
+}
 
 interface Props {
   application: FranchiseApplication
@@ -25,10 +26,11 @@ export function ReviewBoard({ application, progress, onSetItem }: Props) {
         <div key={a.area} className="rounded-xl border border-edge bg-panel2/60 p-3.5">
           <div className="flex items-baseline justify-between gap-2">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-ink">{a.area}</h3>
-            <span className="flex items-baseline gap-1.5 text-xs tabular-nums">
+            <span className="flex items-center gap-1.5 text-xs tabular-nums">
               {a.failed > 0 && (
-                <span className="font-semibold" style={{ color: STATUS_COLORS.critical }}>
-                  ✕{a.failed}
+                <span className="inline-flex items-center gap-0.5 font-semibold text-danger">
+                  <Icon kind="cross" className="h-2.5 w-2.5" />
+                  {a.failed}
                 </span>
               )}
               <span className="text-muted">
@@ -57,14 +59,12 @@ export function ReviewBoard({ application, progress, onSetItem }: Props) {
           <ul className="mt-3 space-y-1.5">
             {a.items.map((item) => {
               const s = STATUS_GLYPH[item.status]
+              const toggle = (target: ReviewItemStatus) =>
+                onSetItem(item.item, item.status === target ? 'Pending' : target)
               return (
                 <li key={item.item} className="group flex items-center gap-2 text-xs">
-                  <span
-                    aria-hidden
-                    className={`w-3 shrink-0 text-center font-bold ${s.className ?? ''}`}
-                    style={s.color ? { color: s.color } : undefined}
-                  >
-                    {s.glyph}
+                  <span className={`w-3 shrink-0 ${s.className}`}>
+                    <Icon kind={s.kind} className="h-3 w-3" />
                   </span>
                   <span
                     className={`flex-1 py-0.5 ${item.status === 'Pending' ? 'text-muted' : 'text-ink'}`}
@@ -72,24 +72,27 @@ export function ReviewBoard({ application, progress, onSetItem }: Props) {
                   >
                     {item.item}
                   </span>
-                  <span className="flex gap-1 opacity-40 transition-opacity group-hover:opacity-100">
+                  <span className="flex gap-1 opacity-60 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100">
+                    <CheckButton
+                      label={`Mark in progress: ${item.item}`}
+                      kind="dot"
+                      active={item.status === 'In Progress'}
+                      activeClass="border-transparent bg-brand text-white"
+                      onClick={() => toggle('In Progress')}
+                    />
                     <CheckButton
                       label={`Validate: ${item.item}`}
-                      glyph="✓"
+                      kind="check"
                       active={item.status === 'Validated'}
-                      activeColor={STATUS_COLORS.good}
-                      onClick={() =>
-                        onSetItem(item.item, item.status === 'Validated' ? 'Pending' : 'Validated')
-                      }
+                      activeClass="border-transparent bg-ok text-white"
+                      onClick={() => toggle('Validated')}
                     />
                     <CheckButton
                       label={`Fail: ${item.item}`}
-                      glyph="✕"
+                      kind="cross"
                       active={item.status === 'Failed'}
-                      activeColor={STATUS_COLORS.critical}
-                      onClick={() =>
-                        onSetItem(item.item, item.status === 'Failed' ? 'Pending' : 'Failed')
-                      }
+                      activeClass="border-transparent bg-danger text-white"
+                      onClick={() => toggle('Failed')}
                     />
                   </span>
                 </li>
@@ -104,15 +107,15 @@ export function ReviewBoard({ application, progress, onSetItem }: Props) {
 
 function CheckButton({
   label,
-  glyph,
+  kind,
   active,
-  activeColor,
+  activeClass,
   onClick,
 }: {
   label: string
-  glyph: string
+  kind: IconKind
   active: boolean
-  activeColor: string
+  activeClass: string
   onClick: () => void
 }) {
   return (
@@ -120,12 +123,11 @@ function CheckButton({
       aria-label={label}
       aria-pressed={active}
       onClick={onClick}
-      className={`flex h-5 w-5 items-center justify-center rounded-md border text-[10px] font-bold transition-colors ${
-        active ? 'border-transparent text-white' : 'border-edge bg-panel text-muted hover:text-ink'
+      className={`flex h-5 w-5 items-center justify-center rounded-md border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/60 ${
+        active ? activeClass : 'border-edge bg-panel text-muted hover:text-ink'
       }`}
-      style={active ? { background: activeColor } : undefined}
     >
-      {glyph}
+      <Icon kind={kind} className="h-2.5 w-2.5" />
     </button>
   )
 }

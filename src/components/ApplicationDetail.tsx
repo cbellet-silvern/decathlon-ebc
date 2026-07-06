@@ -1,35 +1,26 @@
-import type { ApplicationStatus, FranchiseApplication } from '../data/types'
-import { shortDate } from '../lib/format'
+import type { FranchiseApplication } from '../data/types'
 import { overallScore, recommend, validateApplication } from '../lib/scoring'
-import { RecommendationBadge, StatusBadge } from './Badges'
+import { RecommendationBadge } from './Badges'
 import { CriteriaRadar } from './CriteriaRadar'
-import { STATUS_COLORS } from './chartTheme'
+import { Icon } from './Icon'
 
 interface Props {
   application: FranchiseApplication
-  onDecision: (status: ApplicationStatus) => void
 }
 
-export function ApplicationDetail({ application, onDecision }: Props) {
+/** Scoring & validation-gates panel of the candidate page. */
+export function ApplicationDetail({ application }: Props) {
   const checks = validateApplication(application)
   return (
     <div>
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <div className="font-semibold text-ink">{application.candidate}</div>
-          <div className="text-xs text-muted">
-            {application.company} · {application.city}, {application.country} · submitted{' '}
-            {shortDate(application.submitted)}
-          </div>
+      <div className="flex items-baseline justify-between gap-3">
+        <div className="flex items-baseline gap-2">
+          <span className="text-4xl font-bold tracking-tight text-ink">
+            {overallScore(application)}
+          </span>
+          <span className="text-sm text-muted">/ 100 weighted score</span>
         </div>
         <RecommendationBadge value={recommend(application)} />
-      </div>
-
-      <div className="mt-3 flex items-baseline gap-2">
-        <span className="text-4xl font-bold tracking-tight text-ink">
-          {overallScore(application)}
-        </span>
-        <span className="text-sm text-muted">/ 100 weighted score</span>
       </div>
 
       <CriteriaRadar application={application} />
@@ -37,12 +28,8 @@ export function ApplicationDetail({ application, onDecision }: Props) {
       <ul className="mt-2 space-y-2">
         {checks.map((c) => (
           <li key={c.label} className="flex items-start gap-2.5 text-sm">
-            <span
-              aria-hidden
-              className="mt-0.5 text-xs font-bold"
-              style={{ color: c.passed ? STATUS_COLORS.good : STATUS_COLORS.critical }}
-            >
-              {c.passed ? '✓' : '✕'}
+            <span className={`mt-1 ${c.passed ? 'text-ok' : 'text-danger'}`}>
+              <Icon kind={c.passed ? 'check' : 'cross'} className="h-3 w-3" />
             </span>
             <div>
               <span className="text-ink">{c.label}</span>
@@ -57,61 +44,13 @@ export function ApplicationDetail({ application, onDecision }: Props) {
           {application.riskFlags.map((flag) => (
             <div
               key={flag}
-              className="rounded-lg border border-danger/30 bg-danger/5 px-3 py-2 text-xs text-danger"
+              className="flex items-center gap-1.5 rounded-lg border border-danger/30 bg-danger/5 px-3 py-2 text-xs text-danger"
             >
-              ⚠ {flag}
+              <Icon kind="bang" className="h-3 w-3 shrink-0" /> {flag}
             </div>
           ))}
         </div>
       )}
-
-      <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-edge pt-4">
-        <DecisionButton
-          label="Approve"
-          className="border-ok/30 bg-ok/10 text-ok hover:bg-ok/20"
-          active={application.status === 'Approved'}
-          onClick={() => onDecision('Approved')}
-        />
-        <DecisionButton
-          label="Waitlist"
-          className="border-edge bg-panel2 text-muted hover:text-ink"
-          active={application.status === 'Waitlist'}
-          onClick={() => onDecision('Waitlist')}
-        />
-        <DecisionButton
-          label="Reject"
-          className="border-danger/30 bg-danger/10 text-danger hover:bg-danger/20"
-          active={application.status === 'Rejected'}
-          onClick={() => onDecision('Rejected')}
-        />
-        <span className="ml-auto">
-          <StatusBadge value={application.status} />
-        </span>
-      </div>
     </div>
-  )
-}
-
-function DecisionButton({
-  label,
-  className,
-  active,
-  onClick,
-}: {
-  label: string
-  className: string
-  active: boolean
-  onClick: () => void
-}) {
-  return (
-    <button
-      onClick={onClick}
-      aria-pressed={active}
-      className={`rounded-lg border px-3 py-1.5 text-xs font-semibold transition-colors ${className} ${
-        active ? 'ring-2 ring-brand/30' : ''
-      }`}
-    >
-      {label}
-    </button>
   )
 }

@@ -1,6 +1,6 @@
-import type { FranchiseStore } from '../data/types'
+import type { FranchiseStore, StorePerformance } from '../data/types'
 import { eur, shortDate } from '../lib/format'
-import { PerformanceBadge } from './Badges'
+import { Icon, type IconKind } from './Icon'
 
 interface Props {
   stores: FranchiseStore[]
@@ -42,5 +42,22 @@ export function StoreTable({ stores }: Props) {
         </tbody>
       </table>
     </div>
+  )
+}
+
+// Distinct glyph per state so performance never rides on color alone.
+const PERF_STYLE: Record<StorePerformance, { kind: IconKind; className: string }> = {
+  Outperforming: { kind: 'up', className: 'text-ok border-ok/30 bg-ok/10' },
+  'On Target': { kind: 'dot', className: 'text-brand border-brand/30 bg-brand/10' },
+  Underperforming: { kind: 'down', className: 'text-warn border-warn/30 bg-warn/10' },
+}
+
+function PerformanceBadge({ value }: { value: StorePerformance }) {
+  const { kind, className } = PERF_STYLE[value]
+  return (
+    <span className={`pill border ${className}`}>
+      <Icon kind={kind} className="h-2 w-2" />
+      {value}
+    </span>
   )
 }

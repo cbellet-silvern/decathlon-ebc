@@ -12,8 +12,6 @@ export default {
         ink: '#101733', // primary text
         muted: '#5f6a87',
         brand: '#3643ba', // Decathlon Blue
-        brandDeep: '#2a35a0',
-        accent: '#3643ba',
         accent2: '#00885e', // success text / positive deltas
         warn: '#b45309',
         danger: '#c02f2f',

@@ -1,11 +1,10 @@
 import { REVIEW_TEMPLATE } from '../data/reviews'
-import type { FranchiseApplication, ReviewArea, ReviewItemStatus } from '../data/types'
-
-/**
- * Live review state: application id → item label → status. Seeded from
- * data/reviews.ts and owned by App state so reviewers can record checks.
- */
-export type ReviewProgress = Record<string, Record<string, ReviewItemStatus>>
+import type {
+  FranchiseApplication,
+  ReviewArea,
+  ReviewItemStatus,
+  ReviewProgress,
+} from '../data/types'
 
 export interface ChecklistItem {
   area: ReviewArea
@@ -13,19 +12,18 @@ export interface ChecklistItem {
   status: ReviewItemStatus
 }
 
-/** Items not explicitly tracked default by workflow status. */
-function defaultStatus(app: FranchiseApplication): ReviewItemStatus {
-  return app.status === 'Approved' ? 'Validated' : 'Pending'
-}
-
-/** The effective due-diligence checklist for one application. */
+/**
+ * The effective due-diligence checklist for one application. Untracked items
+ * are Pending — status is never inferred from the workflow state, so a
+ * decision can't fabricate or erase recorded checks.
+ */
 export function reviewChecklist(
   app: FranchiseApplication,
   progress: ReviewProgress,
 ): ChecklistItem[] {
   const appProgress = progress[app.id] ?? {}
   return REVIEW_TEMPLATE.flatMap(({ area, items }) =>
-    items.map((item) => ({ area, item, status: appProgress[item] ?? defaultStatus(app) })),
+    items.map((item) => ({ area, item, status: appProgress[item] ?? 'Pending' })),
   )
 }
 

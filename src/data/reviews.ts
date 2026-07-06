@@ -1,4 +1,4 @@
-import type { ReviewArea, ReviewItemStatus } from './types'
+import type { ReviewArea, ReviewItemStatus, ReviewProgress } from './types'
 
 /**
  * The due-diligence checklist every application is reviewed against. The
@@ -32,12 +32,20 @@ export const REVIEW_TEMPLATE: { area: ReviewArea; items: string[] }[] = [
   },
 ]
 
+/** Every template item marked Validated — the seed state of approved applications. */
+const ALL_VALIDATED: Record<string, ReviewItemStatus> = Object.fromEntries(
+  REVIEW_TEMPLATE.flatMap((t) => t.items).map((item) => [item, 'Validated' as const]),
+)
+
 /**
  * Review work actually performed, keyed by application id then item label.
- * Items not listed default by workflow status (lib/review.ts): Approved
- * applications are fully validated, everything else starts Pending.
+ * Items not listed are Pending — nothing is ever inferred from workflow
+ * status, so the board only shows checks that were really recorded.
  */
-export const REVIEW_PROGRESS: Record<string, Record<string, ReviewItemStatus>> = {
+export const REVIEW_PROGRESS: ReviewProgress = {
+  // Amélie Rousseau / Elena Ricci — approved after full due diligence
+  'ap-01': { ...ALL_VALIDATED },
+  'ap-05': { ...ALL_VALIDATED },
   // Jonas De Vries — advanced review, financing letter outstanding
   'ap-02': {
     'Market & catchment study': 'Validated',

@@ -24,10 +24,16 @@ export function avgScore(apps: FranchiseApplication[]): number {
   return Math.round(apps.reduce((acc, a) => acc + overallScore(a), 0) / apps.length)
 }
 
-/** Committed investment across applications not recommended for rejection. */
+/**
+ * Committed investment across the qualified pipeline: a manual Approve counts
+ * regardless of the derived recommendation; undecided applications must pass
+ * the screening (not recommended for rejection).
+ */
 export function qualifiedInvestment(apps: FranchiseApplication[]): number {
   return apps
-    .filter((a) => a.status !== 'Rejected' && recommend(a) !== 'Reject')
+    .filter(
+      (a) => a.status === 'Approved' || (a.status !== 'Rejected' && recommend(a) !== 'Reject'),
+    )
     .reduce((acc, a) => acc + a.investment, 0)
 }
 

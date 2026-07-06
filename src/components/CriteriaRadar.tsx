@@ -22,8 +22,8 @@ export function CriteriaRadar({ application }: Props) {
   return (
     <ResponsiveContainer width="100%" height={220}>
       <RadarChart data={data} outerRadius="72%">
-        <PolarGrid stroke="#26314f" />
-        <PolarAngleAxis dataKey="criterion" tick={{ fill: '#8b96b2', fontSize: 11 }} />
+        <PolarGrid stroke="#e3e7f2" />
+        <PolarAngleAxis dataKey="criterion" tick={{ fill: '#5f6a87', fontSize: 11 }} />
         <PolarRadiusAxis domain={[0, 100]} tick={false} axisLine={false} />
         <Radar
           name={application.candidate}

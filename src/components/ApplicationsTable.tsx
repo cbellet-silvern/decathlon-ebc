@@ -1,10 +1,11 @@
 import { useMemo, useState } from 'react'
-import type { FranchiseApplication } from '../data/types'
+import type { FranchiseApplication, ReviewProgress } from '../data/types'
 import { eur, pct } from '../lib/format'
-import { failedItems, reviewCompletion, type ReviewProgress } from '../lib/review'
+import { failedItems, reviewCompletion } from '../lib/review'
 import { overallScore, recommend } from '../lib/scoring'
 import { RecommendationBadge, StatusBadge } from './Badges'
-import { SERIES, STATUS_COLORS } from './chartTheme'
+import { Icon } from './Icon'
+import { SERIES } from './chartTheme'
 
 type SortKey = 'score' | 'investment' | 'submitted'
 
@@ -87,11 +88,11 @@ export function ApplicationsTable({ applications, progress, selectedId, onSelect
                     <span className="w-8 text-xs tabular-nums text-muted">{pct(completion)}</span>
                     {failed > 0 && (
                       <span
-                        className="text-xs font-semibold tabular-nums"
-                        style={{ color: STATUS_COLORS.critical }}
+                        className="inline-flex items-center gap-0.5 text-xs font-semibold tabular-nums text-danger"
                         title={`${failed} failed check(s)`}
                       >
-                        ✕{failed}
+                        <Icon kind="cross" className="h-2.5 w-2.5" />
+                        {failed}
                       </span>
                     )}
                   </div>

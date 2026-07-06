@@ -27,10 +27,10 @@ export function PipelineChart() {
         <CartesianGrid {...gridStyle} />
         <XAxis dataKey="label" {...axisStyle} />
         <YAxis {...axisStyle} allowDecimals={false} />
-        <Tooltip content={<ChartTooltip />} cursor={{ stroke: '#26314f' }} />
+        <Tooltip content={<ChartTooltip />} cursor={{ stroke: '#e3e7f2' }} />
         <Legend
           iconType="plainline"
-          wrapperStyle={{ fontSize: 12, color: '#8b96b2' }}
+          wrapperStyle={{ fontSize: 12, color: '#5f6a87' }}
           formatter={(value: string) => <span className="text-muted">{value}</span>}
         />
         <Area
