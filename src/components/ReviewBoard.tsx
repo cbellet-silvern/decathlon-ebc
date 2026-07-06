@@ -1,14 +1,15 @@
 import type { FranchiseApplication, ReviewItemStatus } from '../data/types'
 import { areaProgress } from '../lib/review'
-import { STATUS_COLORS } from './chartTheme'
+import { SERIES, STATUS_COLORS } from './chartTheme'
 
 // Distinct glyph per status so state never rides on color alone.
-const STATUS_GLYPH: Record<ReviewItemStatus, { glyph: string; color: string }> = {
-  Validated: { glyph: '✓', color: STATUS_COLORS.good },
-  Failed: { glyph: '✕', color: STATUS_COLORS.critical },
-  'In Progress': { glyph: '●', color: '#5b6cff' },
-  Pending: { glyph: '○', color: '#8b96b2' },
-}
+const STATUS_GLYPH: Record<ReviewItemStatus, { glyph: string; color?: string; className?: string }> =
+  {
+    Validated: { glyph: '✓', color: STATUS_COLORS.good },
+    Failed: { glyph: '✕', color: STATUS_COLORS.critical },
+    'In Progress': { glyph: '●', className: 'text-accent' },
+    Pending: { glyph: '○', className: 'text-muted' },
+  }
 
 interface Props {
   application: FranchiseApplication
@@ -17,25 +18,41 @@ interface Props {
 export function ReviewBoard({ application }: Props) {
   const areas = areaProgress(application)
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
       {areas.map((a) => (
         <div key={a.area} className="rounded-xl border border-edge bg-panel2/40 p-3.5">
           <div className="flex items-baseline justify-between gap-2">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-silver">
               {a.area}
             </h3>
-            <span className="text-xs tabular-nums text-muted">
-              {a.validated}/{a.total}
+            <span className="flex items-baseline gap-1.5 text-xs tabular-nums">
+              {a.failed > 0 && (
+                <span className="font-semibold" style={{ color: STATUS_COLORS.critical }}>
+                  ✕{a.failed}
+                </span>
+              )}
+              <span className="text-muted">
+                {a.validated}/{a.total}
+              </span>
             </span>
           </div>
-          <div className="mt-2 h-1.5 rounded-full bg-panel">
-            <div
-              className="h-1.5 rounded-full"
-              style={{
-                width: `${(a.validated / a.total) * 100}%`,
-                background: a.failed > 0 ? STATUS_COLORS.critical : STATUS_COLORS.good,
-              }}
-            />
+          {/* Blue segment = validated share; red segment = failed share. */}
+          <div className="mt-2 flex h-1.5 gap-px overflow-hidden rounded-full bg-panel">
+            {a.validated > 0 && (
+              <div
+                className="h-1.5"
+                style={{ width: `${(a.validated / a.total) * 100}%`, background: SERIES[0] }}
+              />
+            )}
+            {a.failed > 0 && (
+              <div
+                className="h-1.5"
+                style={{
+                  width: `${(a.failed / a.total) * 100}%`,
+                  background: STATUS_COLORS.critical,
+                }}
+              />
+            )}
           </div>
           <ul className="mt-3 space-y-2">
             {a.items.map((item) => {
@@ -44,8 +61,8 @@ export function ReviewBoard({ application }: Props) {
                 <li key={item.item} className="flex items-start gap-2 text-xs">
                   <span
                     aria-hidden
-                    className="mt-px w-3 shrink-0 text-center font-bold"
-                    style={{ color: s.color }}
+                    className={`mt-px w-3 shrink-0 text-center font-bold ${s.className ?? ''}`}
+                    style={s.color ? { color: s.color } : undefined}
                   >
                     {s.glyph}
                   </span>
