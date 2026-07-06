@@ -28,6 +28,14 @@ interface Props {
   onAddNote: (text: string) => void
 }
 
+// Deep-links into the regional partner portal. The portal base can be
+// overridden per region with a ?portal= query param.
+function partnerPortalHref(app: FranchiseApplication): string {
+  const portal = new URLSearchParams(window.location.search).get('portal')
+  const base = portal ?? 'https://partners.decathlon.example'
+  return `${base}/candidates/${app.id}`
+}
+
 /** The candidate's full application file: assessment, artifacts, due diligence. */
 export function CandidatePage({
   application,
@@ -58,6 +66,14 @@ export function CandidatePage({
             {application.format} · {eur(application.investment)} committed ·{' '}
             {application.retailYears} yrs retail · submitted {shortDate(application.submitted)}
           </p>
+          <a
+            href={partnerPortalHref(application)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-1 inline-block text-xs font-semibold text-brand hover:underline"
+          >
+            View in partner portal →
+          </a>
         </div>
         <DecisionBar application={application} onDecision={onDecision} />
       </div>

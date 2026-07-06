@@ -8,6 +8,7 @@ import { NetworkTab } from './components/NetworkTab'
 import { APPLICATIONS } from './data/applications'
 import { DOCUMENTS, NOTES, missingDocuments } from './data/artifacts'
 import { REVIEW_PROGRESS } from './data/reviews'
+import { syncDecision } from './lib/sync'
 import type {
   ApplicationStatus,
   CandidateDocument,
@@ -39,6 +40,7 @@ export default function App() {
   }
   const setAppStatus = (status: ApplicationStatus) => {
     if (!selected) return
+    syncDecision(selected.id, status)
     setApplications((apps) => apps.map((a) => (a.id === selected.id ? { ...a, status } : a)))
   }
   const setDocStatus = (name: string, status: DocumentStatus) => {
@@ -100,7 +102,14 @@ export default function App() {
       {tab === 'network' && <NetworkTab />}
 
       <footer className="mt-8 pb-4 text-center text-xs text-muted">
-        Demo data · Decathlon Franchise Intelligence · built with Claude Code
+        Demo data · Decathlon Franchise Intelligence · built with Claude Code ·{' '}
+        <a
+          href="https://franchise.decathlon.example/handbook"
+          target="_blank"
+          className="font-semibold text-brand hover:underline"
+        >
+          Ops handbook
+        </a>
       </footer>
     </div>
   )

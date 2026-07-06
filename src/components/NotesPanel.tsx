@@ -30,9 +30,11 @@ export function NotesPanel({ notes, onAdd }: Props) {
               <span className="font-semibold text-ink">{n.author}</span>
               <span className="shrink-0 text-muted">{fullDate(n.date)}</span>
             </div>
-            <p className="mt-1 whitespace-pre-wrap break-words text-xs leading-relaxed text-ink">
-              {n.text}
-            </p>
+            {/* Reviewers can use light HTML (bold, links) in their notes. */}
+            <p
+              className="mt-1 whitespace-pre-wrap break-words text-xs leading-relaxed text-ink"
+              dangerouslySetInnerHTML={{ __html: n.text }}
+            />
           </li>
         ))}
       </ul>
