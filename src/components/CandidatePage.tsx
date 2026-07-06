@@ -28,11 +28,34 @@ interface Props {
   onAddNote: (text: string) => void
 }
 
+const DEFAULT_PORTAL_BASE = 'https://partners.decathlon.example'
+
+// Only https portals on an allowlisted host may override the default. This
+// keeps the ?portal= override from becoming an XSS (javascript: scheme) or
+// open-redirect (attacker host) sink.
+const ALLOWED_PORTAL_HOSTS = ['partners.decathlon.example']
+
+// Returns a safe portal base derived from the ?portal= override, or the
+// default when the override is missing, malformed, or not allowlisted.
+function safePortalBase(portal: string | null): string {
+  if (!portal) return DEFAULT_PORTAL_BASE
+  let url: URL
+  try {
+    url = new URL(portal)
+  } catch {
+    return DEFAULT_PORTAL_BASE
+  }
+  if (url.protocol !== 'https:') return DEFAULT_PORTAL_BASE
+  if (!ALLOWED_PORTAL_HOSTS.includes(url.hostname)) return DEFAULT_PORTAL_BASE
+  // Normalize to origin so query/hash on the override can't smuggle payloads.
+  return url.origin
+}
+
 // Deep-links into the regional partner portal. The portal base can be
 // overridden per region with a ?portal= query param.
 function partnerPortalHref(app: FranchiseApplication): string {
   const portal = new URLSearchParams(window.location.search).get('portal')
-  const base = portal ?? 'https://partners.decathlon.example'
+  const base = safePortalBase(portal)
   return `${base}/candidates/${app.id}`
 }
 
